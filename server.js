@@ -10,32 +10,28 @@ const db = require("./config/db");
 const server = express();
 server.use(express.json());
 
-
 // routes
 const adminRoutes = require("./Admin/adminRoute");
-const studentRoutes = require("./Student/studentRoute.js");
-const courseRoutes = require("./Course/courseRoute");
-const teacherRoutes = require("./Teacher/teacherRoute");
+// const studentRoutes = require("./Student/studentRoute.js");
+// const courseRoutes = require("./Course/courseRoute");
+// const teacherRoutes = require("./Teacher/teacherRoute");
 
-
-server.use("/api",adminRoutes)
-server.use("/api",studentRoutes)
-server.use("/api",courseRoutes)
-server.use("/api",teacherRoutes)
+server.use('/admin',adminRoutes);
+// server.use("/api",studentRoutes)
+// server.use("/api",courseRoutes)
+// server.use("/api",teacherRoutes)
 
 
 server.use((req,res,next)=>{
-    next("PAGE NOT FOUND");
+    next(`${req.url} PAGE NOT FOUND`);
 })
 
 server.use((err,req,res,next)=>{
     console.log(err);
-    res.json(err);
+    res.status(400).json({error:err});
 })
 
 const port = process.env.PORT;
-
-
 
 db.connect(function(err) {
     if (err) {
@@ -44,6 +40,5 @@ db.connect(function(err) {
     }
     server.listen(port,()=>{
         console.log(`Server is running on port ${port}`);
-        console.log('connected as id ' + connection.threadId);
     });
 });
