@@ -1,44 +1,39 @@
 const express = require("express");
 require('dotenv').config();
-//logger-file
-const logger = require("./utils/logger");
 
 //database connection
 const db = require("./config/db");
+
+//logger-file
+const logger = require("./utils/logger");
+
+// routes
+const adminRoutes = require("./Admin/adminRoute");
+// const courseRoutes = require("./Course/courseRoute");
 
 //server-instance
 const server = express();
 server.use(express.json());
 
-// routes
-const adminRoutes = require("./Admin/adminRoute");
-// const studentRoutes = require("./Student/studentRoute.js");
-// const courseRoutes = require("./Course/courseRoute");
-// const teacherRoutes = require("./Teacher/teacherRoute");
+server.use('/api/admin', adminRoutes);
+// server.use('/api/course', courseRoutes);
 
-server.use('/admin',adminRoutes);
-// server.use("/api",studentRoutes)
-// server.use("/api",courseRoutes)
-// server.use("/api",teacherRoutes)
-
-
-server.use((req,res,next)=>{
+server.use((req, res, next) => {
     next(`${req.url} PAGE NOT FOUND`);
 })
 
-server.use((err,req,res,next)=>{
-    console.log(err);
-    res.status(400).json({error:err});
+server.use((err, req, res, next) => {
+    res.status(400).json({ error: err });
 })
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 
-db.connect(function(err) {
+db.connect((err) => {
     if (err) {
-      console.error('error connecting: ' + err.stack);
-      return;
+        console.error('Error Connecting: ' + err.stack);
+        return;
     }
-    server.listen(port,()=>{
+    server.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });
 });

@@ -1,11 +1,8 @@
+const adminModel = require('./adminModel');
+
 function login(req, res) {
   // ...
-  if (req.body.password === 'admin') {
-    req.session.admin = true;
-    res.redirect('/admin');
-  } else {
-    res.redirect('/login');
-  }
+  res.status(200).send("OK");
   // ...
 }
 
