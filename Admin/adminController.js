@@ -1,81 +1,38 @@
 const adminModel = require('./adminModel');
-const connection = require("../config/db")
 const jwt = require("../utils/jwtFn")
+const bcrypt = require("../utils/bcryptFn")
 
 function login(req, res) {
-  try {
-    const { email, password } = req.body;
-
-    connection.query(
-      'SELECT * FROM admin WHERE email = ? AND password = ?',
-      [email, password],
-      (error, results) => {
-        if (error) {
-          console.error('Invalid email or password:');
-          return res.status(500).json({ success: false, error: 'Invalid email or password' });
-        }
-
-        if (results.length > 0) {
-          const token = jwt.generateToken({ role : "admin", email})
-          console.log({"token" : token})
-          res.json({ success: true, message: 'Login successful', data: results[0], token });
-        } else {
-          res.status(401).json({ success: false, error: 'Invalid credentials' });
-        }
-      }
-    );
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+  try{
+    const {email, password} = req.body;
+    const admin = adminModel.getAdminByEmail(email);
+    if(!admin){
+      return res.status(400).json({message:"Invalid Email"})
+    }
+    const isMatch = bcrypt.comparePassword(password, admin.password);
+    if(!isMatch){
+      res.status(400).json({message:"Invalid Password"})
+    }
+    const token = jwt.generateToken({email:admin.email,role:"admin"});
+    res.header("x-auth",token);
+    res.status(200).json({message:"Login Successfull"});
+  }
+  catch(error){
+    res.status(500).json({message:"Internal Server Error"});
   }
 }
 
 
 
 function logOut(req, res) {
-  // ...
-  req.session.admin = false;
-  res.redirect('/login');
-  // ...
+  try{
+    res.header['x-auth']='';
+    res.status(200).json({message:"Logout Successfull"});
+  }
+  catch(error){
+    res.status(500).json({message:"Internal Server Error"});
+  }
 }
 
-const createAdmin = async (req, res) => {
-  try {
-    connection.query(`
-      CREATE TABLE IF NOT EXISTS admin (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        role VARCHAR(50) NOT NULL,
-        password VARCHAR(255) NOT NULL
-      )
-    `, (createTableError, createTableResults) => {
-      if (createTableError) {
-        console.error('Error creating admin table:', createTableError);
-        res.status(500).json({ success: false, error: 'Internal Server Error' });
-        return;
-      }
-      const { name, email, role, password } = req.body;
-      connection.query(
-        'INSERT INTO admin (name, email, role, password) VALUES (?, ?, ?, ?)',
-        [name, email, role, password],
-        (insertError, insertResults) => {
-          if (insertError) {
-            console.error('Error inserting admin record:', insertError);
-            res.status(500).json({ success: false, error: 'Internal Server Error' });
-          } else {
-            res.json({ success: true, data: insertResults });
-          }
-        }
-      );
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
-  }
-};
 
-
-module.exports = { login, logOut, createAdmin }
+module.exports = { login, logOut}
