@@ -18,7 +18,7 @@ function login(req, res) {
     res.status(200).json({message:"Login Successfull"});
   }
   catch(error){
-    res.status(500).json({message:"Internal Server Error"});
+    res.status(500).json({message:"Internal Server Error",error:error.message});
   }
 }
 

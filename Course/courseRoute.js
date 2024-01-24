@@ -9,3 +9,9 @@ router.delete("/:name", middleware.authorize("admin"), courseController.deleteCo
 router.put("/:name",courseController.updateCourse);
 
 module.exports = router;
+
+//req.params :/:name req.params.name
+//req.query ?name=ahmed 
+// req and res on mozila docs
+
+//req.query.q
