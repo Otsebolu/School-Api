@@ -17,7 +17,7 @@ const teacherRoutes = require("./Teacher/teacherRoute");
 const server = express();
 server.use(express.json());
 
-server.use('/api',(req,res)=>{
+server.use('/api',(req,res,next)=>{
     if(req.originalUrl=='/api'){
     res.status(200).json({message:"Welcome to the server"})
 }
@@ -25,10 +25,9 @@ server.use('/api',(req,res)=>{
 })
 
 server.use('/api/admin', adminRoutes);
-// server.use('/api/course', courseRoutes);
-// server.use('/api/student', studentRoutes);
-// server.use('/api/teacher', teacherRoutes); 
-
+server.use('/api/course', courseRoutes);
+server.use('/api/student', studentRoutes);
+server.use('/api/teacher', teacherRoutes); 
 
 server.use((req, res, next) => {
     next(new Error(`${req.url} PAGE NOT FOUND`));
@@ -39,6 +38,7 @@ server.use((err, req, res, next) => {
 })
 
 const port = process.env.PORT || 8000;
+
 
 db.connect((err) => {
     if (err) {

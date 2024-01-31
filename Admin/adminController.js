@@ -2,14 +2,15 @@ const adminModel = require('./adminModel');
 const jwt = require("../utils/jwtFn")
 const bcrypt = require("../utils/bcryptFn")
 
-function login(req, res) {
+async function login(req, res) {
   try{
     const {email, password} = req.body;
-    const admin = adminModel.getAdminByEmail(email);
+    const admin = await adminModel.getAdminByEmail(email);
+
     if(!admin){
       return res.status(400).json({message:"Invalid Email"})
     }
-    const isMatch = bcrypt.comparePassword(password, admin.password);
+    const isMatch = await bcrypt.comparePassword(password, admin.password);
     if(!isMatch){
       res.status(400).json({message:"Invalid Password"})
     }
@@ -26,7 +27,7 @@ function login(req, res) {
 
 function logOut(req, res) {
   try{
-    res.header['x-auth']='';
+    res.setHeader("x-auth","");
     res.status(200).json({message:"Logout Successfull"});
   }
   catch(error){
