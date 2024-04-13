@@ -30,6 +30,7 @@ server.use('/api/student', studentRoutes);
 server.use('/api/teacher', teacherRoutes); 
 
 server.use((req, res, next) => {
+    logger.error("PAGE NOT FOUND")
     next(new Error(`${req.url} PAGE NOT FOUND`));
 })
 
@@ -46,6 +47,7 @@ db.connect((err) => {
         return;
     }
     server.listen(port, () => {
+        logger.info("SERVER RUNNING")
         console.log(`Server is running on port ${port}`);
     });
 });

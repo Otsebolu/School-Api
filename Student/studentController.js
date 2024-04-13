@@ -6,8 +6,8 @@ function register(req,res){
     try{
         const {email,password,dob} = req.body;
         studentModel.createStudent(email,password,dob);
-        const token = jwt.generateToken({email:admin.email,role:"student"});
-        res.header('x-auth',token);
+        const token = jwt.generateToken({email:email,role:"student"});
+        res.header('Authorization',`Bearer ${token}`);
         res.status(200).json({message:"Student Registered Successfully"});
     }
     catch(error){

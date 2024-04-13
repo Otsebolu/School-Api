@@ -3,7 +3,7 @@ const { verifyToken } = require("../utils/jwtFn");
 //Authentication middleware
 const authenticateUser = (req, res, next) => {
     try {
-        const token = req.headers['x-auth'];
+        const token = req.headers['authorization'].split(' ')[1];
         if(!token){
            return res.status(400).json({message:"Token not found"})
         }

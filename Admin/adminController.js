@@ -15,7 +15,7 @@ async function login(req, res) {
       res.status(400).json({message:"Invalid Password"})
     }
     const token = jwt.generateToken({email:admin.email,role:"admin"});
-    res.header("x-auth",token);
+    res.header("Authorization",`Bearer ${token}`);
     res.status(200).json({message:"Login Successfull"});
   }
   catch(error){
@@ -27,7 +27,7 @@ async function login(req, res) {
 
 function logOut(req, res) {
   try{
-    res.setHeader("x-auth","");
+    res.setHeader("Authorization","");
     res.status(200).json({message:"Logout Successfull"});
   }
   catch(error){
