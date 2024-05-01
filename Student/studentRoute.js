@@ -6,9 +6,13 @@ const validateFn = require("../middlewares/validationFn");
 const {studentRegistration, studentLogin} = require("./studentValidation")
 
 router.post("/register",validateFn(studentRegistration),studentController.register);
-router.post("/login",validateFn(studentLogin),studentController.login);
+router.post("/login",validateFn(studentLogin),studentController.signIn);
+
+// David-Dada
+router.get("/all-students", studentController.getAllStudents)
 // router.post("/logout",authenticateUser,studentController.logout);
-router.post("/register-Course",authenticateUser,authorizeUser('student'),studentController.registerCourse);
+// router.post("/register-Course",authenticateUser,authorizeUser('student'),studentController.registerCourse);
 // router.delete("/drop-Course",authenticateUser,authorizeUser('student'),studentController.dropCourse);
 
 module.exports = router;
+

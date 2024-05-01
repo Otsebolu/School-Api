@@ -6,7 +6,7 @@ const studentRegistration = joi.object({
     email:joi.string().email().required(),
     password:joi.string().required(),
     age:joi.number().required(),
-    date_of_birth:joi.date()
+    dob:joi.date()
 })
 
 const studentLogin = joi.object({

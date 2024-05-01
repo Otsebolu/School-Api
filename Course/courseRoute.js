@@ -21,4 +21,3 @@ req.params.title
 
 const courseTitle =  req.params.title;
 courseModel.getCourse(courseTitle);
-swql

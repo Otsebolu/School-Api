@@ -9,9 +9,9 @@ const logger = require("./utils/logger");
 
 // import - routes for each entity
 const adminRoutes = require("./Admin/adminRoute");
-const courseRoutes = require("./Course/courseRoute");
+// const courseRoutes = require("./Course/courseRoute");
 const studentRoutes = require("./Student/studentRoute");
-const teacherRoutes = require("./Teacher/teacherRoute");
+// const teacherRoutes = require("./Teacher/teacherRoute");
 
 //server-instance
 const server = express();
@@ -25,9 +25,9 @@ server.use('/api',(req,res,next)=>{
 })
 
 server.use('/api/admin', adminRoutes);
-server.use('/api/course', courseRoutes);
+// server.use('/api/course', courseRoutes);
 server.use('/api/student', studentRoutes);
-server.use('/api/teacher', teacherRoutes); 
+// server.use('/api/teacher', teacherRoutes); 
 
 server.use((req, res, next) => {
     logger.error("PAGE NOT FOUND")
@@ -35,11 +35,11 @@ server.use((req, res, next) => {
 })
 
 server.use((err, req, res, next) => {
+    console.log(err)
     res.status(400).json({ error: err });
 })
 
 const port = process.env.PORT || 8000;
-
 
 db.connect((err) => {
     if (err) {
