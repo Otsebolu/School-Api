@@ -4,7 +4,8 @@ const bcrypt = require("../utils/bcryptFn");
 
 async function register(req,res){
     try{
-        const {first_name, last_name, age, email,password,dob} = req.body;
+        let {first_name, last_name, age, email,password,dob} = req.body;
+        password = await bcrypt.hashPassword(password)
         await studentModel.createStudent(email,password,dob, first_name, last_name, age);
         // const token = jwt.generateToken({email:email,role:"student"});
         // res.header('Authorization',`Bearer ${token}`);
@@ -18,24 +19,31 @@ async function register(req,res){
 }
 
 //David-Dada
+//this is not correct for signin function
 async function signIn(req, res) {
-    const { email } = req.body
+    const { email, password } = req.body
     try {
-        const user = await studentModel.getStudentEmail(email);
-        if(!user) {
-            res.status(400).json({
-                message: "Students record not found."
-            })
+        const stduser = await studentModel.studentLogin(email);
+        if(!stduser) {
+            return res.status(400).json({message: "Student's record not found."})
         }
 
-        return res.status(200).json({
-            student: user,
-        })
+        const isMatch = await bcrypt.comparePassword(password, stduser.password); //which of the 2 pw is for the DB and for the new one just put in?
+        if(!isMatch){
+          res.status(400).json({message:"Invalid Password"})
+        }
+        const token = jwt.generateToken({email:stduser.email});
+        res.header("Authorization",`Bearer ${token}`);
+        res.status(200).json({message:"Login Successfull", data: `Bearer ${token}`});
     }catch(error){
         console.log(error)
         res.status(500).json({ message: "Internal server error [Login]"})
     }
 }
+
+
+
+
 
 // David-Dada
 async function getAllStudents(req, res) {

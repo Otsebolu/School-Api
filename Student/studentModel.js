@@ -60,6 +60,49 @@ function getStudentEmail(email) {
     }
 }
 
+
+
+//Rose, trying to edit David Mark's owm 
+async function studentLogin(email){
+    try {
+        const sql= query = "SELECT * FROM students WHERE email = ?";
+        return new Promise((resolve,reject)=>{
+            dBConnection.execute(sql,[email],(err,results)=>{
+            if(err){
+                reject(err);
+            }
+            console.log(err,results)
+            resolve(results[0]);
+        });
+    });
+    } 
+    catch (error) {
+        throw error;  
+    }
+}
+   
+
+
+    
+
+async function getAdminByEmail(email){
+    try{
+        const sql = `SELECT * FROM admins WHERE email = '${email}'`;
+        return new Promise((resolve,reject)=>{
+            dBConnection.execute(sql,(err,results)=>{
+            if(err){
+                reject(err);
+            }
+            console.log(err,results)
+            resolve(results);
+        });
+    });
+    }
+    catch(error){
+        throw error;
+    }
+}
+
 // David-Dada
 function fetchAllStudents() {
     try{
@@ -78,4 +121,4 @@ function fetchAllStudents() {
     }
 }
 
-module.exports={createStudent,registerCourse, getStudentEmail, fetchAllStudents}
+module.exports={createStudent,registerCourse, getStudentEmail, fetchAllStudents, studentLogin}
