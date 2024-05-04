@@ -66,7 +66,7 @@ function getStudentEmail(email) {
 //Rose, I edited David Mark's owm 
 async function studentLogin(email){
     try {
-        const sql= query = "SELECT * FROM students WHERE email = ?";
+        const sql= "SELECT * FROM students WHERE email = ?";
         return new Promise((resolve,reject)=>{
             dBConnection.execute(sql,[email],(err,results)=>{
             if(err){
@@ -143,7 +143,7 @@ function findAStudent(email){
 
 function deleteStudent(email){
     try {
-        const query = "DELETE * FROM students WHERE email = ?";
+        const query = "DELETE FROM students WHERE email = ?";
         return new Promise((resolve, reject) => {
             dBConnection.execute(query, [email],(err,result) =>{
                 if(err) {

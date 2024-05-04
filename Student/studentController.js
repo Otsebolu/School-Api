@@ -73,8 +73,15 @@ async function findStudent(req, res){
 async function DeleteStudent(req, res) {
     const { email } = req.body
     try{
-        const std1 = await studentModel.deleteStudent(email);
-        res.status(200).json({message: "Student deleted", data: std1})
+        const std = await studentModel.findAStudent(email)
+        console.log("std", std)
+        if(std) {
+            const std1 = await studentModel.deleteStudent(email);
+            res.status(200).json({message: "Student deleted", data: std1})
+        }else {
+            res.status(400).json({ message: "Student not found."})
+        }
+        
     }catch(err) {
         console.log(err)
         res.status(500).json({ message: "Internal server error [deleting students]"})

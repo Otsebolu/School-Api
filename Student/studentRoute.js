@@ -12,7 +12,7 @@ router.post("/login",validateFn(studentLogin),studentController.signIn);
 router.get("/all-students", studentController.getAllStudents)
 //Roselyn
 router.get("/findstd", studentController.findStudent)
-router.get('/delete',  studentController.DeleteStudent)
+router.delete('/delete',  studentController.DeleteStudent)
 router.put("/update", studentController.UpdateStudent)
 // router.post("/logout",authenticateUser,studentController.logout);
 // router.post("/register-Course",authenticateUser,authorizeUser('student'),studentController.registerCourse);
