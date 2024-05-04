@@ -19,9 +19,9 @@ async function register(req,res){
 }
 
 //David-Dada
-//this is not correct for signin function
+//Done by Roselyn, edited by David Dada
 async function signIn(req, res) {
-    const { email, password } = req.body
+    const { email, password } = req.body     //GETTING EMAIL, PW FROM USER (OUTSIDE WORLD)
     try {
         const stduser = await studentModel.studentLogin(email);
         if(!stduser) {
@@ -56,6 +56,48 @@ async function getAllStudents(req, res) {
     }
 }
 
+//find a student
+async function findStudent(req, res){
+    const { email } = req.body
+    try{
+        const std = await studentModel.findAStudent(email);
+        res.status(200).json({ message: "Found the students", data: std})
+    }catch(err) {
+        console.log(err)
+        res.status(500).json({ message: "Internal server error [fetch students]"})
+    }   
+}
+
+
+//3. Delete student
+async function DeleteStudent(req, res) {
+    const { email } = req.body
+    try{
+        const std1 = await studentModel.deleteStudent(email);
+        res.status(200).json({message: "Student deleted", data: std1})
+    }catch(err) {
+        console.log(err)
+        res.status(500).json({ message: "Internal server error [deleting students]"})
+    }
+}
+
+
+  //
+//4. update student.
+//hope its correct
+async function UpdateStudent(req, res) {
+    try{
+      const { email } = req.body
+      await studentModel.updateStudent(email)
+      res.status(200).json({message: "Admin information updated"})
+    }catch(err){
+      console.log(err)
+      res.status(500).json({ message: "Internal server error [error updating admins]"})
+    }
+  }
+  
+
+
 
 function registerCourse(req,res){
     try{
@@ -72,4 +114,4 @@ function registerCourse(req,res){
     }
 }
 
-module.exports={register,registerCourse, signIn, getAllStudents};
+module.exports={register,registerCourse, signIn, getAllStudents, findStudent, DeleteStudent, UpdateStudent};

@@ -1,3 +1,4 @@
+const { query } = require("express");
 const dBConnection = require("../config/db");
 const courseModel = require("../Course/courseModel");
 
@@ -51,7 +52,7 @@ function getStudentEmail(email) {
                 if(err) {
                     reject(err)
                 }else{
-                    resolve(result)
+                    resolve(result[0])
                 }
             })
         })
@@ -62,7 +63,7 @@ function getStudentEmail(email) {
 
 
 
-//Rose, trying to edit David Mark's owm 
+//Rose, I edited David Mark's owm 
 async function studentLogin(email){
     try {
         const sql= query = "SELECT * FROM students WHERE email = ?";
@@ -121,4 +122,61 @@ function fetchAllStudents() {
     }
 }
 
-module.exports={createStudent,registerCourse, getStudentEmail, fetchAllStudents, studentLogin}
+
+function findAStudent(email){
+    try{
+        const query = "SELECT * FROM students WHERE email = ? "; 
+        return new Promise((resolve, reject) => {
+            dBConnection.query(query, [email], (err, result) => {
+                if(err){
+                    reject(err)
+                }else{
+                    console.log(err,result)
+                    resolve(result)  
+                } 
+            })           
+        })  
+    }catch(err) {
+        throw err;
+    }
+}
+
+function deleteStudent(email){
+    try {
+        const query = "DELETE * FROM students WHERE email = ?";
+        return new Promise((resolve, reject) => {
+            dBConnection.execute(query, [email],(err,result) =>{
+                if(err) {
+                    reject(err)
+                }else{
+                    resolve(result)
+                }
+            })
+        })
+    }catch (err) {
+        throw err;
+    }
+} 
+
+function updateStudent(email){
+    try{
+        const sql = `
+            UPDATE students(email) 
+            VALUES('${email}')`;
+        return new Promise((resolve,reject)=>{
+            dBConnection.execute(sql,(err,results)=>{
+            if(err){
+                reject(err);
+            }
+            resolve(results);
+        });
+    });
+    }
+    catch(error){
+        throw new Error(error)
+    }
+
+}
+
+
+module.exports={createStudent,registerCourse, getStudentEmail, fetchAllStudents, studentLogin, findAStudent, deleteStudent, updateStudent}

@@ -10,6 +10,10 @@ router.post("/login",validateFn(studentLogin),studentController.signIn);
 
 // David-Dada
 router.get("/all-students", studentController.getAllStudents)
+//Roselyn
+router.get("/findstd", studentController.findStudent)
+router.get('/delete',  studentController.DeleteStudent)
+router.put("/update", studentController.UpdateStudent)
 // router.post("/logout",authenticateUser,studentController.logout);
 // router.post("/register-Course",authenticateUser,authorizeUser('student'),studentController.registerCourse);
 // router.delete("/drop-Course",authenticateUser,authorizeUser('student'),studentController.dropCourse);
