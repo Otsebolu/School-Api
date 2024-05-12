@@ -14,4 +14,7 @@ const studentLogin = joi.object({
     password:joi.string().required()
 })
 
+//course
+//course code, student email, 
+
 module.exports = {studentLogin , studentRegistration};

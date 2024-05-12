@@ -75,11 +75,12 @@ async function DeleteStudent(req, res) {
     try{
         const std = await studentModel.findAStudent(email)
         console.log("std", std)
+        if(std.length === 0) {
+            return res.status(400).json({message: "Student is not found."}) //not working well for all use cases. deleting emails that r not in DB AND NOT ABLE TO SAY THE STUDENT IS NOT IN DB, WHEN TESTED WITH FAKE EMAIL NOT IN DB
+        }
         if(std) {
-            const std1 = await studentModel.deleteStudent(email);
-            res.status(200).json({message: "Student deleted", data: std1})
-        }else {
-            res.status(400).json({ message: "Student not found."})
+            const std = await studentModel.deleteStudent(email);
+            res.status(200).json({message: "Student deleted", data: std})
         }
         
     }catch(err) {
@@ -93,13 +94,28 @@ async function DeleteStudent(req, res) {
 //4. update student.
 //hope its correct
 async function UpdateStudent(req, res) {
+    const { email } = req.body
     try{
-      const { email } = req.body
-      await studentModel.updateStudent(email)
-      res.status(200).json({message: "Admin information updated"})
+      //const { email } = req.body
+      const std = await studentModel.findAStudent(email)
+      console.log("std", std)
+      if(std.length === 0){
+        res.status(404).json({
+            error: "student not found!!"
+        })
+      }
+      if(std) {
+        let {first_name, last_name, age, password,dob, email} = req.body;
+        {
+            const std1 = await studentModel.updateStudent(first_name, last_name, age, password, dob,email)
+            res.status(200).json({message: "Student information updated"}) //HOW TO PASS IN THE REGISTER FXN THAT OPENS UP THE FORM TO BE FILLED.?    
+        }
+       
+      }
+
     }catch(err){
       console.log(err)
-      res.status(500).json({ message: "Internal server error [error updating admins]"})
+      res.status(500).json({ message: "Internal server error [error updating student]"})
     }
   }
   

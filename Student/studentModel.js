@@ -90,7 +90,7 @@ async function getAdminByEmail(email){
     try{
         const sql = `SELECT * FROM admins WHERE email = '${email}'`;
         return new Promise((resolve,reject)=>{
-            dBConnection.execute(sql,(err,results)=>{
+            dBConnection.execute(sql, [email],(err,results)=>{
             if(err){
                 reject(err);
             }
@@ -158,25 +158,49 @@ function deleteStudent(email){
     }
 } 
 
-function updateStudent(email){
-    try{
+// function updateStudent(first_name, last_name, age, password, dob){
+//     try{
+//         const sql = `
+//             UPDATE students(password, dob, first_name, last_name, age) 
+//             VALUES('${email}','${first_name}', '${last_name}', '${age}', '${dob}' )`;
+//         return new Promise((resolve,reject)=>{
+//             dBConnection.execute(sql,(err,results)=>{
+//             if(err){
+//                 reject(err);
+//             }
+//             resolve(results);
+//         });
+//     });
+//     }
+//     catch(error){
+//         throw new Error(error)
+//     }
+
+// }
+
+async function updateStudent(password, dob, first_name, last_name, age, email) {
+    try {
         const sql = `
-            UPDATE students(email) 
-            VALUES('${email}')`;
-        return new Promise((resolve,reject)=>{
-            dBConnection.execute(sql,(err,results)=>{
-            if(err){
-                reject(err);
-            }
-            resolve(results);
-        });
-    });
-    }
-    catch(error){
-        throw new Error(error)
-    }
+            UPDATE students
+            SET first_name = '${first_name}', 
+                last_name = '${last_name}',
+                password = '${password}',
+                age= '${age}',
+                dob = '${dob}'
+            WHERE email = '${email}'`;
 
+        return new Promise((resolve, reject) => {
+            dBConnection.execute(sql, [email], (err, result) => {
+                if (err) {
+                    reject(err);
+                }else{
+                resolve(result)
+                }
+            })
+        })
+    } catch (err) {
+        throw err;
+    }
 }
-
 
 module.exports={createStudent,registerCourse, getStudentEmail, fetchAllStudents, studentLogin, findAStudent, deleteStudent, updateStudent}
