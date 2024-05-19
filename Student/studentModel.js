@@ -6,7 +6,7 @@ function createStudent(email,password,dob, first_name, last_name, age){
     try{
         const sql = `
             INSERT INTO students(email,password,dob, first_name,last_name,age) 
-            VALUES('${email}','${password}','${dob}', '${first_name}', '${last_name}', '${age}')`;
+            VALUES('${email}','${password}','${new Date()}', '${first_name}', '${last_name}', '${age}')`;
         return new Promise((resolve,reject)=>{
             dBConnection.execute(sql,(err,results)=>{
             if(err){
@@ -178,29 +178,29 @@ function deleteStudent(email){
 
 // }
 
-async function updateStudent(password, dob, first_name, last_name, age, email) {
-    try {
-        const sql = `
-            UPDATE students
-            SET first_name = '${first_name}', 
-                last_name = '${last_name}',
-                password = '${password}',
-                age= '${age}',
-                dob = '${dob}'
-            WHERE email = '${email}'`;
+// async function updateStudent(password, dob, first_name, last_name, age, email) {
+//     try {
+//         const sql = `
+//             UPDATE students
+//             SET first_name = '${first_name}', 
+//                 last_name = '${last_name}',
+//                 password = '${password}',
+//                 age= '${age}',
+//                 dob = '${dob}'
+//             WHERE email = '${email}'`;
 
-        return new Promise((resolve, reject) => {
-            dBConnection.execute(sql, [email], (err, result) => {
-                if (err) {
-                    reject(err);
-                }else{
-                resolve(result)
-                }
-            })
-        })
-    } catch (err) {
-        throw err;
-    }
-}
+//         return new Promise((resolve, reject) => {
+//             dBConnection.execute(sql, [email], (err, result) => {
+//                 if (err) {
+//                     reject(err);
+//                 }else{
+//                 resolve(result)
+//                 }
+//             })
+//         })
+//     } catch (err) {
+//         throw err;
+//     }
+// }
 
-module.exports={createStudent,registerCourse, getStudentEmail, fetchAllStudents, studentLogin, findAStudent, deleteStudent, updateStudent}
+module.exports={createStudent,registerCourse, getStudentEmail, fetchAllStudents, studentLogin, findAStudent, deleteStudent}

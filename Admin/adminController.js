@@ -55,7 +55,7 @@ async function UpdateAdmin(req, res) {
 //this <login>fxn is working with <getAdminByEmail> in <adminModel.js>
 async function login(req, res) {
   try{
-    const {email, password} = req.body; //accepting email and password
+    const {email, password} = req.body; //accepting email and password from user
     const admin = await adminModel.getAdminByEmail(email); //send request to database
 
     if(!admin){

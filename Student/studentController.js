@@ -71,9 +71,9 @@ async function findStudent(req, res){
 
 //3. Delete student
 async function DeleteStudent(req, res) {
-    const { email } = req.body
+    const { email } = req.body    //accepting email from user
     try{
-        const std = await studentModel.findAStudent(email)
+        const std = await studentModel.findAStudent(email)    //send request to database
         console.log("std", std)
         if(std.length === 0) {
             return res.status(400).json({message: "Student is not found."}) //not working well for all use cases. deleting emails that r not in DB AND NOT ABLE TO SAY THE STUDENT IS NOT IN DB, WHEN TESTED WITH FAKE EMAIL NOT IN DB
@@ -105,19 +105,18 @@ async function UpdateStudent(req, res) {
         })
       }
       if(std) {
-        let {first_name, last_name, age, password,dob, email} = req.body;
-        {
-            const std1 = await studentModel.updateStudent(first_name, last_name, age, password, dob,email)
-            res.status(200).json({message: "Student information updated"}) //HOW TO PASS IN THE REGISTER FXN THAT OPENS UP THE FORM TO BE FILLED.?    
-        }
-       
+
+            let {first_name, last_name, age, email,password,dob} = req.body;
+            password = await bcrypt.hashPassword(password)
+            const std1 = await studentModel.createStudent(email,password,dob, first_name, last_name, age); // how to make email unchangeable.
+            res.status(200).json({message: "Student information updated"}) //HOW TO PASS IN THE REGISTER FXN THAT OPENS UP THE FORM TO BE FILLED.?     
       }
 
     }catch(err){
       console.log(err)
       res.status(500).json({ message: "Internal server error [error updating student]"})
     }
-  }
+}
   
 
 

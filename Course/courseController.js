@@ -1,15 +1,23 @@
 const courseModel = require("./courseModel");
 
-function createCourse(req,res){
-    try{
-    const { course_name,course_code,course_units}=req.body;
-    if(courseModel.getCourse(course_name)){
-        res.status(400).json({message:"Course exists already"});
+function createCourse(req, res) {
+  try {
+    const { course_title, course_code, course_units, course_description } =
+      req.body;
+    const course = courseModel.getCourse(course_title);
+    if (course) {
+      res.status(400).json({ message: "Course exists already" });
     }
-    courseModel.createCourse(course_name,course_code,course_units)}
-    catch(err){
-        res.status(500).json({message:"Error creating course",error:err});
-    }    
+    const createdCourse = courseModel.createCourse({
+      course_title,
+      course_code,
+      course_units,
+      course_description}
+    );
+    res.status(200).json({message:"Course Created successfully",data:createdCourse})
+  } catch (err) {
+    res.status(500).json({ message: "Error creating course", error: err });
+  }
 }
 
 function getAllCourses(req,res){
@@ -22,3 +30,30 @@ function getAllCourses(req,res){
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+module.exports={createCourse};
